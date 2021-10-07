@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                      <h1 class="display-4">Chat basic with socket.io</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="border: 1px solid #000;" id="conversation">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="media">
+                    <div class="media-body">
+                      <h5 class="mt-0">Conversación</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="form-row align-items-center">
+            <div class="col-md-11">
+                <input type="text" id="message" placeholder="Mensaje" class="form-control"/>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" id="sendMessage">Enviar</button>
+            </div>
+        </div>
+        
+    </div>
+<script src="https://cdn.socket.io/3.1.1/socket.io.min.js" integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script>
+    const socket = io();
+
+    function addNewMessage(message){
+        const newMessage = `
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="media">
+                        <div class="media-body">
+                            <p>${message}</p>    
+                        </div>
+                    </div>    
+                </div>
+            </div>
+        `;
+        $('#conversation').append(newMessage);
+    }
+
+    $( "#sendMessage" ).click(function() {
+        socket.emit("chat message", {
+            message: $('#message').val(),
+        });
+        $('#message').val('');
+    });
+
+    
+
+    socket.on("chat message", function (data) {
+        addNewMessage(data.message);
+    });
+
+</script>
+</body>
+</html>
